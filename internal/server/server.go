@@ -1,9 +1,10 @@
-package test2
+package server
 
-var y = true
 
-func addT() {
-	t += 2
+func AddT(t int) int {
+	t += 1
+	return t
+
 }
 
 //
