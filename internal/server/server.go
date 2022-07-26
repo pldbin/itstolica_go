@@ -1,5 +1,6 @@
-package test2
+package server
 
-func addT() {
+func AddT(t int) int {
 	t += 1
+	return t
 }
