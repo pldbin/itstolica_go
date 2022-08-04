@@ -11,7 +11,7 @@ func main() {
 	// 	fmt.Println("hi pld", a)
 	// 	f.Println("hi pld", a)
 	// 	show()
-	server.ShowT()
+	// server.ShowT()
 	// 	fmt.Println(I)
 	// ShowApp()
 	// server.Math()
@@ -19,4 +19,5 @@ func main() {
 	// fmt.Println(gui.I)
 	// server.WorkFile()
 	// server.ExampleJson()
+	server.ExampleMap()
 }

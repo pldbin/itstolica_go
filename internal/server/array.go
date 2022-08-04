@@ -6,7 +6,9 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"math/rand"
 	"os"
+	"time"
 	"unicode/utf8"
 )
 
@@ -41,16 +43,17 @@ func (p *Person) SetAge(age int) {
 	fmt.Println("Age changed:", p.Age)
 }
 
-//1523123
-var t = 6
+var t = 6 //1523123
 
 func init() {
 	t = 20
 }
 
-func Add(nums ...int) (res int, err error) {
+// type double float64
+
+func Add[K int | float64](nums ...K) (res K, err error) { //Generics
 	for _, num := range nums {
-		res += num // res = res + num
+		res += num
 	}
 	return res, err
 }
@@ -306,10 +309,84 @@ func ExampleJson() {
 	_ = ioutil.WriteFile("test.json", file, 0644)
 }
 
-func ExampleMap() {
+// ExampleMap ex
+func ExampleMap() { //fbsmdsf
 	m := make(map[string]int)
 	m["andrew"] = 2
 	fmt.Println(m["andrew"])
-	m2 := make(map[string]map[int]int)
-	m2["a"][5] = 5
+	// m2 := make(map[string]map[int]int)
+	// m2["a"][5] = 5
+	i, ok := m["andrew"]
+	fmt.Println(i, ok)
+	delete(m, "andrew")
+	i, ok = m["andrew"]
+	fmt.Println(i, ok)
+
+	add := func(x, y int) int {
+		return x + y
+	}
+	k := add(5, 3)
+	k++
+	add = func(a, b int) int {
+		return a - b
+	}
+	fmt.Println(add(5, 3))
+
+	a := new(Android)
+	a.Model = "X"
+	a.Talk("0101010")
+	a.Info.Talk()
+	// a.Info.Age
+
+	rand.Seed(time.Now().UnixNano())
+
+	for i := 0; i < 20; i++ {
+		temp := rand.Intn(50)
+		fmt.Printf("%d ", temp)
+	}
+	fmt.Println()
+	fmt.Println(time.Now())
+
+	open222()
 }
+
+type Android struct {
+	Info  Person
+	Model string
+}
+
+func (p *Person) Talk() {
+	fmt.Println("Hello")
+
+}
+
+func (b *Android) Talk(str string) {
+	fmt.Println(str, b.Model)
+}
+
+func f(n int) {
+	for i := 0; i < 10; i++ {
+		fmt.Println(n, ":", i)
+		amt := time.Duration(rand.Intn(250))
+		time.Sleep(time.Millisecond * amt)
+
+	}
+}
+
+func open222() {
+	// var a Person
+	for i := 0; i < 10; i++ {
+		go f(i)
+		// go a.Talk()
+	}
+	time.Sleep(time.Second)
+
+	input := ""
+	fmt.Scanln(&input)
+
+}
+
+// func getN(max, min int) (num int) { //200 -50
+// 	num = rand.Intn(max-min) + min //200 -50
+// 	return
+// }
