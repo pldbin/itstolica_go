@@ -2,11 +2,14 @@ package server
 
 import (
 	"bufio"
+	"encoding/gob"
 	"encoding/json"
 	"fmt"
+	"hash/crc32"
 	"io/ioutil"
 	"log"
 	"math/rand"
+	"net"
 	"os"
 	"time"
 	"unicode/utf8"
@@ -347,7 +350,8 @@ func ExampleMap() { //fbsmdsf
 	fmt.Println()
 	fmt.Println(time.Now())
 
-	open222()
+	// open222()
+
 }
 
 type Android struct {
@@ -386,7 +390,186 @@ func open222() {
 
 }
 
+func ExampleDir() {
+	dir, err := os.Open(".")
+	if err != nil {
+		return
+	}
+	defer dir.Close()
+	fileInfos, err := dir.Readdir(-1)
+	if err != nil {
+		return
+	}
+	for _, fi := range fileInfos {
+		fmt.Println(fi)
+	}
+	fmt.Println()
+	fmt.Println()
+
+	dir2, err := os.Open(".")
+	if err != nil {
+		return
+	}
+	defer dir2.Close()
+	DirEntry, err := dir2.ReadDir(-1)
+	if err != nil {
+		return
+	}
+	for _, fi := range DirEntry {
+		fmt.Println(fi)
+	}
+}
+
+func ExampleHash() {
+	h := crc32.NewIEEE()
+	h.Write([]byte("test"))
+	v := h.Sum32()
+	fmt.Println(v)
+	h2 := crc32.NewIEEE()
+	h2.Write([]byte("test"))
+	v = h2.Sum32()
+	fmt.Println(v)
+	h3 := crc32.NewIEEE()
+	h3.Write([]byte("tesy"))
+	v = h3.Sum32()
+	fmt.Println(v)
+}
+
+// type Info struct {
+// 	age  int
+// 	name string
+// }
+
+// type ListElement struct {
+// 	el   Info
+// 	next *ListElement
+// }
+
+// type List []ListElement
+
+// func NewList() (lst *List, err error) {
+// 	lst = new(List)
+// 	lst.El = make([]ListElement, 0)
+// 	return
+// }
+
+// func Next(){
+
+// }
+
+// func (l *List) InsertAtEnd(info Info) {
+// 	var le ListElement
+// 	le.el = info
+// 	if len(l.El) == 0 {
+// 		l.El = append(l.El, le)
+// 	} else {
+// 		i := l.El[0].next
+// 		for {
+// 			if i!=nil{
+// 				i = i.Next()
+// 			}
+// 		}
+// 	}
+// }
+// func (l *List) InsertAtHead(i Info) {
+
+// }
+
+// func ExapmpleListOne() {
+// 	var v List
+// 	per1 := Info{name: "Nick", age: 25}
+// 	per2 := Info{13, "Rick"}
+// 	v.InsertAtEnd(per1)
+// 	v.InsertAtEnd(per2)
+// 	fmt.Printf("%#v\n", v)
+// }
+
+// func ExapmpleListTwo() {
+// 	var v List
+// 	per1 := Info{name: "Nick", age: 25}
+// 	per2 := Info{13, "Rick"}
+// 	ellist1 := El
+// 	v.InsertAtEnd(per1)
+// 	v.InsertAtEnd(per2)
+// 	fmt.Printf("%#v\n", v)
+// }
+
+// func NewList(nums ...int) (lst *List, err error) {
+// 	lst = new(List)
+// 	if len(nums) > 1 {
+// 		if nums[0] > nums[1] {
+// 			lst.El = make([]ListElement, nums[0])
+// 		} else {
+// 			lst.El = make([]ListElement, nums[0], nums[1])
+// 		}
+// 	} else if len(nums) == 1 {
+// 		lst.El = make([]ListElement, nums[0])
+// 	} else {
+// 		return nil, errors.New("Not enought arguments in NewList()")
+// 	}
+// 	return
+// }
+
 // func getN(max, min int) (num int) { //200 -50
 // 	num = rand.Intn(max-min) + min //200 -50
 // 	return
 // }
+
+func server() {
+	// слушать порт
+	ln, err := net.Listen("tcp", ":9999")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	for {
+		// принятие соединения
+		c, err := ln.Accept()
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+		// обработка соединения
+		go handleServerConnection(c)
+	}
+}
+func handleServerConnection(c net.Conn) {
+	// получение сообщения
+	var msg string
+	err := gob.NewDecoder(c).Decode(&msg)
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println("Received", msg)
+	}
+	c.Close()
+}
+func client() {
+	// соединиться с сервером
+	c, err := net.Dial("tcp", "127.0.0.1:9999")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	// послать сообщение
+	msg := "Hello World"
+	fmt.Println("Sending", msg)
+	err = gob.NewEncoder(c).Encode(msg)
+	if err != nil {
+		fmt.Println(err)
+	}
+	c.Close()
+}
+func ExampleServer() {
+	rand.Seed(time.Now().UnixNano())
+	go server()
+	go func() {
+		for {
+			go client()
+			time.Sleep(time.Millisecond * time.Duration(rand.Intn(2000)))
+		}
+	}()
+
+	var input string
+	fmt.Scanln(&input)
+}

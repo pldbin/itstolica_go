@@ -19,5 +19,8 @@ func main() {
 	// fmt.Println(gui.I)
 	// server.WorkFile()
 	// server.ExampleJson()
-	server.ExampleMap()
+	// server.ExampleMap()
+	// server.ExampleDir()
+	// server.ExampleHash()
+	server.ExampleServer()
 }
