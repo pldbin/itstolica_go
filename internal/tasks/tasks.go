@@ -54,6 +54,6 @@ func Game() {
 }
 
 // CorrectNum return one number from input
-// func CorrectNum() (num int) {
-// 	return
-// }
+func CorrectNum() (num int) {
+	return
+}
