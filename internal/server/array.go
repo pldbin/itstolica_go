@@ -2,15 +2,20 @@ package server
 
 import (
 	"bufio"
+	"crypto/sha1"
 	"encoding/gob"
 	"encoding/json"
 	"fmt"
 	"hash/crc32"
+	"io"
 	"io/ioutil"
 	"log"
 	"math/rand"
 	"net"
+	"net/http"
+	"net/rpc"
 	"os"
+	"sync"
 	"time"
 	"unicode/utf8"
 )
@@ -570,6 +575,118 @@ func ExampleServer() {
 		}
 	}()
 
+	var input string
+	fmt.Scanln(&input)
+}
+
+func getHash(filename string) ([]byte, error) {
+	bs, err := ioutil.ReadFile(filename)
+	if err != nil {
+		return nil, err
+	}
+	h := sha1.New()
+	h.Write(bs)
+	return h.Sum([]byte{}), nil
+}
+
+func ExampleHash2() {
+	h1, err := getHash("test1.txt")
+	if err != nil {
+		return
+	}
+	h2, err := getHash("test2.txt")
+	if err != nil {
+		return
+	}
+	fmt.Println(h1, h2)
+	for _, v := range h1 {
+		fmt.Printf("%x", uint8(v))
+	}
+	fmt.Println()
+	for _, v := range h2 {
+		fmt.Printf("%x", uint32(v))
+	}
+	fmt.Println()
+	// fmt.Printf(h1, h2)
+}
+
+const htmlDoc = `<!doctype html>
+<html>
+<head>
+<title>Hello World</title>
+</head>
+<body>
+Hello World!
+</body>
+</html>`
+
+func hello(res http.ResponseWriter, req *http.Request) {
+	res.Header().Set("Content-Type", "text/html")
+	io.WriteString(res, htmlDoc)
+}
+
+func ExampleServer2() {
+	http.HandleFunc("/hello", hello)
+	http.ListenAndServe(":9000", nil)
+}
+
+type Server struct{}
+
+func (this *Server) Negate(i int64, reply *int64) error {
+	*reply = -i
+	return nil
+}
+func server3() {
+	rpc.Register(new(Server))
+	ln, err := net.Listen("tcp", ":9999")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	for {
+		c, err := ln.Accept()
+		if err != nil {
+			continue
+		}
+		go rpc.ServeConn(c)
+	}
+}
+func client3() {
+	c, err := rpc.Dial("tcp", "127.0.0.1:9999")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	var result int64
+	err = c.Call("Server.Negate", int64(999), &result)
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println("Server.Negate(999) =", result)
+	}
+}
+func ExampleServer3() {
+	go server3()
+	go client3()
+	var input string
+	fmt.Scanln(&input)
+}
+
+func ExampleArgs() {
+	fmt.Println(os.Args)
+}
+
+func ExampleMutex() {
+	m := new(sync.Mutex)
+	for i := 0; i < 10; i++ {
+		go func(i int) {
+			m.Lock()
+			fmt.Println(i, "start")
+			time.Sleep(time.Second)
+			fmt.Println(i, "end")
+			m.Unlock()
+		}(i)
+	}
 	var input string
 	fmt.Scanln(&input)
 }

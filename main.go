@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/pldbin/prog1/internal/server"
 	// . "github.com/pldbin/prog1/internal/gui"
 	_ "github.com/pldbin/prog1/internal/server"
+	"github.com/pldbin/prog1/internal/tasks"
 )
 
 func main() {
@@ -22,5 +22,11 @@ func main() {
 	// server.ExampleMap()
 	// server.ExampleDir()
 	// server.ExampleHash()
-	server.ExampleServer()
+	// server.ExampleHash2()
+	// server.ExampleServer()
+	// server.ExampleServer2()
+	// server.ExampleServer3()
+	// server.ExampleArgs()
+	// server.ExampleMutex()
+	tasks.Game()
 }
