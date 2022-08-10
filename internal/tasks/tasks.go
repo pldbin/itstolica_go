@@ -11,7 +11,7 @@ func init() {
 }
 
 // Game
-func Game1() {
+func Game() {
 	// fmt.Println()
 	fmt.Println("Start Game, enter a number of range and press enter:")
 	var d int
@@ -33,6 +33,13 @@ func Game1() {
 			break
 		} else {
 			fmt.Println("Wrong number ")
+			if num > r {
+				fmt.Println(">")
+			}
+			if num < r {
+				fmt.Println("<")
+			}
+
 			// fmt.Println("input number 0-7: ")
 		}
 	}
@@ -71,4 +78,20 @@ func CorrectNum(num int) (result int) {
 	return
 }
 
-func 
+var a int
+
+func Ew() {
+	x := []int{
+		48, 96, 86, 68,
+		57, 82, 63, 70,
+		37, 34, 83, 27,
+		19, 97, 9, 17,
+	}
+	min := x[0]
+	for i := 0; i <= len(x); i++ {
+		if min > x[i] {
+			min = x[i]
+		}
+	}
+	fmt.Println(min)
+}

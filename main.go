@@ -28,5 +28,6 @@ func main() {
 	// server.ExampleServer3()
 	// server.ExampleArgs()
 	// server.ExampleMutex()
-	tasks.Game()
+	// tasks.Game()
+	tasks.Ew()
 }
