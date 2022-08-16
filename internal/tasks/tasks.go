@@ -80,18 +80,26 @@ func CorrectNum(num int) (result int) {
 
 var a int
 
-func Ew() {
-	x := []int{
-		48, 96, 86, 68,
-		57, 82, 63, 70,
-		37, 34, 83, 27,
-		19, 97, 9, 17,
+// Ew result is the number of elements % 2
+func Ew() (result bool) {
+	var numberww int
+	fmt.Println("number")
+	fmt.Scanf("%d\n", &numberww)
+	putnum := numberww % 2
+	if putnum%2 == 0 {
+		result = true
+		fmt.Println("1. true")
+	} else {
+		result = false
+		fmt.Println("2. false")
 	}
-	min := x[0]
-	for i := 0; i <= len(x); i++ {
-		if min > x[i] {
-			min = x[i]
-		}
-	}
-	fmt.Println(min)
+	return result
 }
+
+/*
+• Напишите функцию, которая принимает число, делит его пополам
+и возвращает true
+в случае,
+если исходное число чётное, и false, если нечетное.
+ 39стр.
+*/

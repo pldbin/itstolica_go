@@ -1,0 +1,7 @@
+{
+	"editor.fontFamily": "JetBrains Mono",
+	"editor.fontSize": 14,
+	"editor.fontWeight": "normal",
+	"editor.formatOnSave": false,
+	"diffEditor.codeLens": false
+}
