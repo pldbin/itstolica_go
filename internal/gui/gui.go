@@ -1,23 +1,12 @@
 package gui
 
-// import (
-// 	"fyne.io/fyne/v2/app"
-// 	"fyne.io/fyne/v2/container"
-// 	"fyne.io/fyne/v2/widget"
-// )
-import (
-	"fmt"
+//var I = 9
 
-	"github.com/pldbin/prog1/internal/server"
-)
-
-var I = 9
-
-func FuncAddT() {
-	k := server.AddT(I)
-	fmt.Println(k)
-
-}
+//func FuncAddT() {
+//	k := server.AddT(I)
+//	fmt.Println(k)
+//
+//}
 
 // func ShowApp() {
 // 	a := app.New()
